@@ -35,6 +35,7 @@ setup(
     "enum34==1.0.4",
     "envoy==0.0.3",
     "pyzmq==14.5.0",
+    "defusedxml==0.7.1",
   ],
   zip_safe=False
 )
