@@ -6,13 +6,13 @@
 # of patent rights can be found in the PATENTS file in the same directory.
 
 import sys
-import random
 import json
 import time
 
 from core.config_database import ConfigDB
 from core.bts.base import BaseBTS
 from core.exceptions import BSSError
+import secrets
 
 class FakeBTS(BaseBTS):
 
@@ -65,15 +65,15 @@ class FakeBTS(BaseBTS):
 
     def get_load(self):
         return {
-            'sdcch_load': random.choice(list(range(0, self.__get('sddch')))),
+            'sdcch_load': secrets.choice(list(range(0, self.__get('sddch')))),
             'sdcch_available': self.__get('sddch'),
-            'tchf_load': random.choice(list(range(0, self.__get('tchf')))),
+            'tchf_load': secrets.choice(list(range(0, self.__get('tchf')))),
             'tchf_available': self.__get('tchf'),
-            'pch_active': random.choice(list(range(0, self.__get('pch')))),
+            'pch_active': secrets.choice(list(range(0, self.__get('pch')))),
             'pch_total': self.__get('pch'),
-            'agch_active': random.choice(list(range(0, self.__get('agch')))),
+            'agch_active': secrets.choice(list(range(0, self.__get('agch')))),
             'agch_pending': 0,
-            'gprs_current_pdchs': random.choice(list(range(0, self.__get('pdch')))),
+            'gprs_current_pdchs': secrets.choice(list(range(0, self.__get('pdch')))),
             #probably should math this
             'gprs_utilization_percentage': .4,
         }

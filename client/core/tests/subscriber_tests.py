@@ -21,6 +21,7 @@ from random import randrange
 import unittest
 
 from core.subscriber import subscriber
+import secrets
 
 
 class CreditTest(unittest.TestCase):
@@ -59,7 +60,7 @@ class CreditTest(unittest.TestCase):
 
     def test_add_credit(self):
         """ We can add credit to a subscriber's balance. """
-        increment = randrange(1, 1000)
+        increment = secrets.SystemRandom().randrange(1, 1000)
         prior = subscriber.get_account_balance(self.TEST_IMSI)
         subscriber.add_credit(self.TEST_IMSI, increment)
         after = subscriber.get_account_balance(self.TEST_IMSI)
@@ -67,9 +68,9 @@ class CreditTest(unittest.TestCase):
 
     def test_subtract_credit(self):
         """ We can subtract credit from a subscriber's balance. """
-        prior = randrange(1, 1000)  # add some credit first
+        prior = secrets.SystemRandom().randrange(1, 1000)  # add some credit first
         subscriber.add_credit(self.TEST_IMSI, prior)
-        decrement = randrange(0, prior)
+        decrement = secrets.SystemRandom().randrange(0, prior)
         subscriber.subtract_credit(self.TEST_IMSI, decrement)
         after = subscriber.get_account_balance(self.TEST_IMSI)
         self.assertEqual(prior - int(decrement), after)
@@ -121,6 +122,6 @@ class CreditTest(unittest.TestCase):
         confusing displays in the dashboard.
         """
         prior = subscriber.get_account_balance(self.TEST_IMSI)
-        decrement = prior + randrange(1, 1000)
+        decrement = prior + secrets.SystemRandom().randrange(1, 1000)
         subscriber.subtract_credit(self.TEST_IMSI, decrement)
         self.assertEqual(0, subscriber.get_account_balance(self.TEST_IMSI))

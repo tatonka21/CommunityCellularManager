@@ -7,8 +7,6 @@ This source code is licensed under the BSD-style license found in the
 LICENSE file in the root directory of this source tree. An additional grant
 of patent rights can be found in the PATENTS file in the same directory.
 """
-
-import random
 import string
 from threading import Thread
 
@@ -25,6 +23,7 @@ from ESL import ESLconnection
 from core.config_database import ConfigDB
 
 from .base import BaseFakePhone
+import secrets
 
 
 SIP_PORT = 5060
@@ -32,7 +31,7 @@ SIP_REG_PORT = 5064
 
 
 def genTag(length):
-    return ''.join(random.choice(string.ascii_lowercase + string.digits)
+    return ''.join(secrets.choice(string.ascii_lowercase + string.digits)
                    for _ in range(length))
 
 
