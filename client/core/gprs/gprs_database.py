@@ -60,13 +60,13 @@ class GPRSDB(object):
         """
         schema = ('imsi, ipaddr, uploaded_bytes, downloaded_bytes,'
                   ' uploaded_bytes_delta, downloaded_bytes_delta')
-        values = "'%s', '%s', %s, %s, %s, %s" % (
-            imsi, ipaddr, up_bytes, down_bytes, up_bytes_delta,
+        values = "?, ?, %s, %s, %s, %s" % (
+            up_bytes, down_bytes, up_bytes_delta,
             down_bytes_delta)
         command = 'insert into %s (%s) values(%s)' % (
             self.table_name, schema, values)
         with self.connection.cursor() as cursor:
-            cursor.execute(command)
+            cursor.execute(command, (imsi, ipaddr, ))
             self.connection.commit()
 
     def get_latest_record(self, imsi):
@@ -74,10 +74,10 @@ class GPRSDB(object):
 
         Returns None if no record was found.
         """
-        command = "select * from %s where imsi='%s' order by id desc limit 1"
+        command = "select * from %s where imsi=? order by id desc limit 1"
         with self.connection.cursor(
             cursor_factory=psycopg2.extras.RealDictCursor) as cursor:
-            cursor.execute(command % (self.table_name, imsi))
+            cursor.execute(command % self.table_name, (imsi, ))
             self.connection.commit()
             if not cursor.rowcount:
                 return None
