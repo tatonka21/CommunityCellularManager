@@ -11,9 +11,9 @@ of patent rights can be found in the PATENTS file in the same directory.
 
 import json
 import uuid
-import requests
 import envoy
 import argparse
+from security import safe_requests
 
 p = argparse.ArgumentParser(description='Generate a Certificate Signing Request')
 p.add_argument('--new', dest='new', action="store_const", 
@@ -32,7 +32,7 @@ raw_input("Register BTS %s into the web interface. Press enter when done." % ide
 params = {
     'bts_uuid': iden
 }
-r = requests.get("http://127.0.0.1:8080/api/v1/bts/sslconf", params=params)
+r = safe_requests.get("http://127.0.0.1:8080/api/v1/bts/sslconf", params=params)
 if (r.status_code != 200):
     raise Exception("Unable to generate ssl conf")
 
