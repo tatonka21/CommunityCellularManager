@@ -7,13 +7,12 @@ This source code is licensed under the BSD-style license found in the
 LICENSE file in the root directory of this source tree. An additional grant 
 of patent rights can be found in the PATENTS file in the same directory.
 """
-
-import random
 import sys
 
 from smspdu import SMS_SUBMIT
 
 from . import SMS_Helper
+import secrets
 
 
 def gen_tpdu(ref, to, text, empty):
@@ -40,7 +39,7 @@ def gen_rp_header(ref, empty):
 
 def gen_msg(to, text, empty=False):
     # Note we are constructing a RPDU which encapsulates a TPDU.
-    ref = str(SMS_Helper.to_hex2(random.randint(0, 255)))
+    ref = str(SMS_Helper.to_hex2(secrets.SystemRandom().randint(0, 255)))
     rp_header = gen_rp_header(ref, empty)
     tpdu = gen_tpdu(ref, to, text, empty)
     tp_len = len("".join(tpdu)) / 2  # In octets.

@@ -15,9 +15,9 @@ from __future__ import print_function
 from __future__ import unicode_literals
 
 import abc
-from random import randrange
 import six
 import xml.dom
+import secrets
 
 # The Freeswitch XML CDR format contains a lot of data that isn't used by CCM.
 # CCM's CDR parsing is done by searching for specific tags, so CDR structure
@@ -111,4 +111,4 @@ class CloudVoiceCdr(XmlCdr):
 
 def gen_number(digits, prefix):
     """ Helper function to generate a random MSISDN. """
-    return prefix + ("%099d" % (randrange(0, 10 ** digits), ))[-digits:]
+    return prefix + ("%099d" % (secrets.SystemRandom().randrange(0, 10 ** digits), ))[-digits:]
