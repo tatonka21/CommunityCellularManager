@@ -117,6 +117,6 @@ class OutgoingSMSHandler(object):
                     "destination": to,
                     "service_type": service_type
                 }
-                requests.post(billing_url, data=params)
+                requests.post(billing_url, data=params, timeout=60)
         except Exception as e:
             logger.error("Endaga " + traceback.format_exc(e))

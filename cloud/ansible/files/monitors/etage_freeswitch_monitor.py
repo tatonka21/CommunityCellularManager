@@ -68,4 +68,4 @@ def count_active_calls(dp):
 datapoints = []
 check_sofia_status(datapoints)
 count_active_calls(datapoints)
-requests.post(ODS_URL, data={'datapoints': json.dumps(datapoints)})
+requests.post(ODS_URL, data={'datapoints': json.dumps(datapoints)}, timeout=60)

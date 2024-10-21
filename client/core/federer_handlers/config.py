@@ -164,7 +164,7 @@ class config(object):
         }
         files = {'file': open(tmp_file, 'rb')}
         r = requests.post(self.conf['registry'] + "/bts/logfile", data=params,
-                         files=files, headers=self.ic.auth_header)
+                         files=files, headers=self.ic.auth_header, timeout=60)
         try:
             if r.status_code == 200:
                 logger.info("Log req %s posted successfully" % msgid)

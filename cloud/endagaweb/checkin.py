@@ -427,7 +427,7 @@ class CheckinResponder(object):
                                       'band': band,
                                       'channel': chnl,
                                       'power_level': pwr_lvl,
-                })
+                }, timeout=60)
             except Exception:
                 logging.error('SASON Acquire failed')
                 return None
@@ -440,7 +440,7 @@ class CheckinResponder(object):
                                       'long': self.bts.longitude,
                                       # self for now -kurtis
                                       'bands': self.bts.band,
-                })
+                }, timeout=60)
             except Exception:
                 logging.error('SASON Request failed')
                 return None
