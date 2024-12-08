@@ -9,12 +9,12 @@ of patent rights can be found in the PATENTS file in the same directory.
 """
 
 import web
-import xml.dom.minidom as xml
 
 from ccm.common import logger
 from core import events
 from core import billing
 from core.subscriber import subscriber
+import defusedxml.minidom
 
 IMSI_PREFIX = "IMSI"
 
@@ -45,7 +45,7 @@ class cdr(object):
 
     def process_cdr(self, cdr_xml):
         """Processes the XML CDR for the caller."""
-        cdr_dom = xml.parseString(cdr_xml)
+        cdr_dom = defusedxml.minidom.parseString(cdr_xml)
         # Handle only b-legs for billing.
         origin = cdr_dom.getElementsByTagName("origination")
         if origin:
