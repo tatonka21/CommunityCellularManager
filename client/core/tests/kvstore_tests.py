@@ -17,13 +17,13 @@ of patent rights can be found in the PATENTS file in the same directory.
 
 
 from os import environ
-from random import randrange
 
 import unittest
 
 from core.db.connector import ConnectorAbort
 from core.db.kvstore import KVStore
 from .sqlite3_connector import Sqlite3Connector
+import secrets
 
 
 class StubDatabase(KVStore):
@@ -103,7 +103,7 @@ class KVStoreTest(unittest.TestCase):
 
     def test_contains(self):
         """We can check if a key is present."""
-        key = 'key-%d' % (randrange(0, 1e9), )
+        key = 'key-%d' % (secrets.SystemRandom().randrange(0, 1e9), )
         self.assertFalse(key in self.db)
         self.db[key] = 'yup'
         self.assertTrue(key in self.db)
@@ -235,12 +235,12 @@ class TransactionTest(unittest.TestCase):
             # value set in outer context should be visible
             self.assertEqual(v1, v1_expected)
             # update value
-            delta = randrange(1e7, 2e7)
+            delta = secrets.SystemRandom().randrange(1e7, 2e7)
             self.db._set(cur, 'key-1', v1 + delta)
             return delta
 
         def outer(cur):
-            v1 = randrange(0, 1e6)
+            v1 = secrets.SystemRandom().randrange(0, 1e6)
             self.db._set(cur, 'key-1', v1)
             delta = self.db._connector.with_cursor(inner, v1)
             # change made in inner context should be visible
@@ -255,12 +255,12 @@ class TransactionTest(unittest.TestCase):
             # value set in outer context should be visible
             self.assertEqual(v1, v1_expected)
             # update value using outer cursor
-            delta = randrange(1e7, 2e7)
+            delta = secrets.SystemRandom().randrange(1e7, 2e7)
             self.db._set(outer_cur, 'key-1', v1 + delta)
             return delta
 
         def outer(cur):
-            v1 = randrange(0, 1e6)
+            v1 = secrets.SystemRandom().randrange(0, 1e6)
             self.db._set(cur, 'key-1', v1)
             delta = self.db._connector.with_cursor(inner, cur, v1)
             # change made in inner context should be visible
@@ -277,12 +277,12 @@ class TransactionTest(unittest.TestCase):
                 # value set in outer txn should be visible
                 self.assertEqual(v1, v1_expected)
                 # update value
-                delta = randrange(1e7, 2e7)
+                delta = secrets.SystemRandom().randrange(1e7, 2e7)
                 self.db._set(cur, 'key-1', v1 + delta)
                 return delta
 
         def outer(cur):
-            v1 = randrange(0, 1e6)
+            v1 = secrets.SystemRandom().randrange(0, 1e6)
             self.db._set(cur, 'key-1', v1)
             delta = self.db._connector.execute(inner, v1)
             # change made in inner context should be visible
@@ -304,9 +304,9 @@ class TransactionTest(unittest.TestCase):
                 raise ConnectorAbort("testing rollback")
 
         def outer(cur):
-            v1 = randrange(0, 1e6)
+            v1 = secrets.SystemRandom().randrange(0, 1e6)
             self.db._set(cur, 'key-1', v1)
-            delta = randrange(1e7, 2e7)
+            delta = secrets.SystemRandom().randrange(1e7, 2e7)
             self.db._connector.execute(inner, v1, delta)
             # change made in inner context are NOT rolled back
             self.assertEqual(v1 + delta, self.db._get_option(cur, 'key-1'))
@@ -327,16 +327,16 @@ class TransactionTest(unittest.TestCase):
                 raise ConnectorAbort("testing rollback")
 
         def outer(cur):
-            v1 = randrange(0, 1e6)
+            v1 = secrets.SystemRandom().randrange(0, 1e6)
             self.db._set(cur, 'key-1', v1)
-            delta = randrange(1e7, 2e7)
+            delta = secrets.SystemRandom().randrange(1e7, 2e7)
             self.db._connector.execute(inner, cur, v1, delta)
             # change made in inner context should NOT have been rolled back
             self.assertEqual(v1 + delta, self.db._get_option(cur, 'key-1'))
             return v1 + delta
 
         # set an initial value
-        v0 = randrange(0, 1e5)
+        v0 = secrets.SystemRandom().randrange(0, 1e5)
         self.db['key-1'] = v0
         v2 = self.db._connector.with_cursor(outer)
         # check that inner connection was not rolled back
@@ -362,10 +362,10 @@ class TransactionTest(unittest.TestCase):
             raise ConnectorAbort("testing outer rollback")
 
         # set an initial value
-        v0 = randrange(0, 1e5)
+        v0 = secrets.SystemRandom().randrange(0, 1e5)
         self.db['key-1'] = v0
-        v1 = randrange(v0, 1e6)
-        v1_delta = randrange(1e7, 2e7)
+        v1 = secrets.SystemRandom().randrange(v0, 1e6)
+        v1_delta = secrets.SystemRandom().randrange(1e7, 2e7)
         self.db._connector.with_cursor(outer, v1, v1_delta)
         # test that inner txn changes have not been rolled back
         self.assertEqual(v1 + v1_delta, self.db['key-1'])

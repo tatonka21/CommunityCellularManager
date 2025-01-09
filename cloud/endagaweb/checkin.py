@@ -11,7 +11,6 @@ import datetime
 import json
 import logging
 import requests
-import random
 
 from django.db import transaction
 from django.conf import settings
@@ -26,6 +25,7 @@ from endagaweb.models import Subscriber
 from endagaweb.models import TimeseriesStat
 from endagaweb.models import UsageEvent
 from endagaweb.util.parse_destination import parse_destination
+import secrets
 
 
 class CheckinResponder(object):
@@ -465,7 +465,7 @@ class CheckinResponder(object):
                     break
                 # ask for it
                 req = req.json()
-                channel = random.choice(req[band])
+                channel = secrets.choice(req[band])
                 pwr_level = req['power_level']
                 acq = sas_acquire(band, channel, pwr_level)
             # if we got one, return it

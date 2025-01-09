@@ -21,7 +21,6 @@ from __future__ import unicode_literals
 import json
 import mock
 import os
-from random import randrange
 import urllib
 
 from django.core.exceptions import ObjectDoesNotExist
@@ -34,12 +33,13 @@ from endagaweb import models
 from endagaweb import notifications
 from endagaweb.billing import tier_setup
 import endagaweb.views.api
+import secrets
 
 
 def _set_network_credit(network, amount=-1):
     """ Add credit to a network, unless billing disabled. """
     if amount < 0:
-        amount = randrange(1000, 1000000)
+        amount = secrets.SystemRandom().randrange(1000, 1000000)
     if network.billing_enabled:
         network.add_credit(amount)
     else:

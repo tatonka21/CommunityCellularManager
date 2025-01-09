@@ -10,7 +10,6 @@ of patent rights can be found in the PATENTS file in the same directory.
 
 import gettext
 import os
-import random
 import re
 import sqlite3
 import time
@@ -22,6 +21,7 @@ from core import freeswitch_strings
 from core.sms import sms
 from core.subscriber import subscriber
 from core.exceptions import SubscriberNotFound
+import secrets
 
 
 config_db = config_database.ConfigDB()
@@ -74,7 +74,7 @@ def process_transfer(from_imsi, to_imsi, amount):
     # Add the pending transfer.
     code = ''
     for _ in range(int(config_db['code_length'])):
-        code += str(random.randint(0, 9))
+        code += str(secrets.SystemRandom().randint(0, 9))
     db = sqlite3.connect(config_db['pending_transfer_db_path'])
     db.execute("INSERT INTO pending_transfers VALUES (?, ?, ?, ?, ?)",
                (code, time.time(), from_imsi, to_imsi, amount))

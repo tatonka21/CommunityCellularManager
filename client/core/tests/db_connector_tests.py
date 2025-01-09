@@ -5,23 +5,12 @@ This source code is licensed under the BSD-style license found in the
 LICENSE file in the root directory of this source tree. An additional grant
 of patent rights can be found in the PATENTS file in the same directory.
 """
-
-# Tests for the database connector.
-#
-# Usage:
-#     nosetests core.tests.db_connector_tests
-
-
-
-
-
-
-from random import randrange
 import sqlite3
 import unittest
 
 from core.db.connector import ConnectorAbort, ConnectorError, DatabaseError
 from .sqlite3_connector import RestartError, Sqlite3Connector
+import secrets
 
 
 class DbConnectorTest(unittest.TestCase):
@@ -63,7 +52,7 @@ class DbConnectorTest(unittest.TestCase):
     @classmethod
     def _insert_new(cls, key):
 
-        new_val = randrange(0, 1000000)
+        new_val = secrets.SystemRandom().randrange(0, 1000000)
         cls.set_val(key, new_val)
         return new_val
 
@@ -86,7 +75,7 @@ class DbConnectorTest(unittest.TestCase):
 
     def test_abort(self):
         """ We can explicitly abort a transaction. """
-        prior = randrange(0, 1000000)
+        prior = secrets.SystemRandom().randrange(0, 1000000)
         self.set_val('key0', prior)
         self.assertEqual(prior, self.get_val('key0'))
 
@@ -94,32 +83,32 @@ class DbConnectorTest(unittest.TestCase):
             self._set(cur, 'key0', prior + delta)
             raise ConnectorAbort
 
-        self.connector.with_cursor(_abort, randrange(1, 1e6))
+        self.connector.with_cursor(_abort, secrets.SystemRandom().randrange(1, 1e6))
         self.assertEqual(prior, self.get_val('key0'))
 
     def test_restart(self):
         """We can restart a transaction."""
-        test_data = [('key0', randrange(0, 1000000)),
-                     ('key0', randrange(0, 1000000))]
+        test_data = [('key0', secrets.SystemRandom().randrange(0, 1000000)),
+                     ('key0', secrets.SystemRandom().randrange(0, 1000000))]
 
         self._run_test(test_data, 1)
         self.assertEqual(test_data[1][1], self.get_val('key0'))
 
     def test_restart_twice(self):
         """We can restart a transaction twice."""
-        test_data = [('key0', randrange(0, 1000000)),
-                     ('key0', randrange(0, 1000000)),
-                     ('key0', randrange(0, 1000000))]
+        test_data = [('key0', secrets.SystemRandom().randrange(0, 1000000)),
+                     ('key0', secrets.SystemRandom().randrange(0, 1000000)),
+                     ('key0', secrets.SystemRandom().randrange(0, 1000000))]
 
         self._run_test(test_data, 2)
         self.assertEqual(test_data[2][1], self.get_val('key0'))
 
     def test_restart_limit(self):
         """There is a limit (2) to how many times we restart a transaction."""
-        test_data = [('key0', randrange(0, 1000000)),
-                     ('key0', randrange(0, 1000000)),
-                     ('key0', randrange(0, 1000000)),
-                     ('key0', randrange(0, 1000000))]
+        test_data = [('key0', secrets.SystemRandom().randrange(0, 1000000)),
+                     ('key0', secrets.SystemRandom().randrange(0, 1000000)),
+                     ('key0', secrets.SystemRandom().randrange(0, 1000000)),
+                     ('key0', secrets.SystemRandom().randrange(0, 1000000))]
         # insert a value that we want to confirm is not overwritten
         val0 = self._insert_new('key0')
 
@@ -131,8 +120,8 @@ class DbConnectorTest(unittest.TestCase):
 
     def test_rollback(self):
         """We can rollback a transaction."""
-        test_data = [('key0', randrange(0, 1000000)),
-                     ('key1', randrange(0, 1000000))]
+        test_data = [('key0', secrets.SystemRandom().randrange(0, 1000000)),
+                     ('key1', secrets.SystemRandom().randrange(0, 1000000))]
         # insert a value that we want to confirm is not overwritten
         val0 = self._insert_new('key0')
 
