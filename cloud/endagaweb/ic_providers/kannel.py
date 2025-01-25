@@ -72,6 +72,6 @@ class KannelProvider(provider.InterconnectProvider):
             'text' : body
         }
         
-        r = requests.get(self.outbound_sms_url, params=request)
+        r = requests.get(self.outbound_sms_url, params=request, timeout=60)
         
         return (r.status_code >= 200 and r.status_code < 300)

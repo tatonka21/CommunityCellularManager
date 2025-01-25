@@ -75,7 +75,7 @@ class endaga_ic(object):
                               data={
                                   'imsi': imsi,
                                   'bts_uuid': snowflake.snowflake()
-                              })
+                              }, timeout=60)
         except BaseException as e:  # log and rethrow
             logger.error("Endaga: Register network error: %s." % e)
             raise
@@ -105,7 +105,7 @@ class endaga_ic(object):
         # TODO(matt): use urlparse.urljoin here?
         endpoint = self.conf['registry'] + "/send/"
         try:
-            r = requests.post(endpoint, headers=self.auth_header, data=message)
+            r = requests.post(endpoint, headers=self.auth_header, data=message, timeout=60)
         except BaseException as e:  # log and rethrow as it was before
             logger.error("Endaga: Send SMS network error: %s." % e)
             raise

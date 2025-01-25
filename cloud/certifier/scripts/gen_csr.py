@@ -32,7 +32,7 @@ raw_input("Register BTS %s into the web interface. Press enter when done." % ide
 params = {
     'bts_uuid': iden
 }
-r = requests.get("http://127.0.0.1:8080/api/v1/bts/sslconf", params=params)
+r = requests.get("http://127.0.0.1:8080/api/v1/bts/sslconf", params=params, timeout=60)
 if (r.status_code != 200):
     raise Exception("Unable to generate ssl conf")
 
