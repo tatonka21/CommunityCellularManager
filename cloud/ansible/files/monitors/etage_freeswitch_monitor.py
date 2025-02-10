@@ -41,7 +41,7 @@ def check_sofia_status(dp):
                        'value': int(status == "RUNNING")})
             subres = subprocess.check_output('/usr/bin/fs_cli -x '
                                              '"sofia status profile %s"' % (name,),
-                                             shell=True).split("\n")
+                                             shell=False).split("\n")
             for t in ["CALLS-IN", "CALLS-OUT"]:
                 for subr in subres:
                     if (t in subr):

@@ -252,7 +252,7 @@ def verify_cert(_, cert_path, ca_path):
         with open("/dev/null", "wb") as dev_null:
             subprocess.check_output("openssl verify -CAfile %s %s" %
                                     (ca_path, cert_path),
-                                    shell=True, stderr=dev_null)
+                                    shell=False, stderr=dev_null)
         return True
     except subprocess.CalledProcessError as ex:
         logger.warning("Unable to verify %s against %s: %s" %
