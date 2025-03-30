@@ -11,7 +11,7 @@ of patent rights can be found in the PATENTS file in the same directory.
 from django.conf import settings
 from endagaweb.models import Number
 from endagaweb.ic_providers import provider
-import requests
+from security import safe_requests
 
 class KannelProvider(provider.InterconnectProvider):
     """The Kannel client -- interfaces with Kannel directly."""
@@ -72,6 +72,6 @@ class KannelProvider(provider.InterconnectProvider):
             'text' : body
         }
         
-        r = requests.get(self.outbound_sms_url, params=request)
+        r = safe_requests.get(self.outbound_sms_url, params=request)
         
         return (r.status_code >= 200 and r.status_code < 300)
