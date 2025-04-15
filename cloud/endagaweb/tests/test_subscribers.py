@@ -14,7 +14,6 @@ from __future__ import print_function
 from __future__ import unicode_literals
 
 from datetime import datetime
-from random import randrange
 import uuid
 
 import pytz
@@ -23,6 +22,7 @@ from django.test import TestCase
 
 from ccm.common import crdt
 from endagaweb import models
+import secrets
 
 
 class TestBase(TestCase):
@@ -62,7 +62,7 @@ class TestBase(TestCase):
 
     @staticmethod
     def gen_imsi():
-        return 'IMSI0%014d' % (randrange(1, 1e10), )
+        return 'IMSI0%014d' % (secrets.SystemRandom().randrange(1, 1e10), )
 
     @staticmethod
     def get_sub(imsi):
@@ -75,37 +75,37 @@ class SubscriberBalanceTests(TestBase):
     """
     def test_sub_get_balance(self):
         """ Test the balance property. """
-        bal = randrange(1, 1000)
+        bal = secrets.SystemRandom().randrange(1, 1000)
         sub = self.add_sub(self.gen_imsi(),
                            balance=bal)
         self.assertEqual(sub.balance, bal)
 
     def test_sub_update_balance(self):
         """ Test that we can add credit to a subscriber. """
-        bal = randrange(1, 1000)
+        bal = secrets.SystemRandom().randrange(1, 1000)
         imsi = self.gen_imsi()
         self.add_sub(imsi, balance=bal)
-        delta = randrange(1, 1000)
+        delta = secrets.SystemRandom().randrange(1, 1000)
         c = self.gen_crdt(delta)
         models.Subscriber.update_balance(imsi, c)
         self.assertEqual(self.get_sub(imsi).balance, bal + delta)
 
     def test_sub_update_balance_negative(self):
         """ Test that we can subtract credit from a subscriber. """
-        bal = randrange(1, 1000)
+        bal = secrets.SystemRandom().randrange(1, 1000)
         imsi = self.gen_imsi()
         self.add_sub(imsi, balance=bal)
-        delta = randrange(0, bal)
+        delta = secrets.SystemRandom().randrange(0, bal)
         c = self.gen_crdt(-delta)
         models.Subscriber.update_balance(imsi, c)
         self.assertEqual(self.get_sub(imsi).balance, bal - delta)
 
     def test_sub_change_balance(self):
         """ Test the change_balance class method. """
-        bal = randrange(1, 1000)
+        bal = secrets.SystemRandom().randrange(1, 1000)
         sub = self.add_sub(self.gen_imsi(),
                            balance=bal)
-        delta = randrange(1, 1000)
+        delta = secrets.SystemRandom().randrange(1, 1000)
         sub.change_balance(delta)
         self.assertEqual(sub.balance, bal + delta)
 
@@ -113,12 +113,12 @@ class SubscriberBalanceTests(TestBase):
         """ Test the balance update fails if balance already set. """
         # works if balance is not yet used
         sub = self.add_sub(self.gen_imsi())
-        bal = randrange(1, 1000)
+        bal = secrets.SystemRandom().randrange(1, 1000)
         sub.balance = bal  # works since it's currently zero
         self.assertEqual(sub.balance, bal)
         # throws exception if balance already set
         with self.assertRaises(ValueError):
-            sub.balance = randrange(1, 1000)
+            sub.balance = secrets.SystemRandom().randrange(1, 1000)
 
 
 class ActiveSubscriberTests(TestBase):

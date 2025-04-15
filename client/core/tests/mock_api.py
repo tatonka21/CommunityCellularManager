@@ -9,13 +9,13 @@ of patent rights can be found in the PATENTS file in the same directory.
 """
 
 import json
-import random
 
 import web
 
 from ccm.common import logger
 from core.config_database import ConfigDB
 import snowflake
+import secrets
 
 
 URLS_NOMINAL = ("/bts/register/", "MockBTSRegistration",
@@ -41,7 +41,7 @@ class MockNumberAllocation:
         auth_token = web.ctx.env['HTTP_AUTHORIZATION']
         assert uuid == snowflake.snowflake()
         assert auth_token == "Token %s" % CONF['endaga_token']
-        return '1%010d' % random.randint(1000000000, 9999999999)
+        return '1%010d' % secrets.SystemRandom().randint(1000000000, 9999999999)
 
 
 class MockRegistration:
@@ -55,7 +55,7 @@ class MockRegistration:
         assert data.bts_uuid == snowflake.snowflake()
         assert len(data.imsi) == 19
         assert auth_token == "Token %s" % CONF['endaga_token']
-        return json.dumps({ 'number': '1%010d' % random.randint(1000000000, 9999999999) })
+        return json.dumps({ 'number': '1%010d' % secrets.SystemRandom().randint(1000000000, 9999999999) })
 
 
 URLS_BAD_NUMBER_ALLOCATION = ("/fetch/(.*)/", "MockFailedNumberAllocation")
