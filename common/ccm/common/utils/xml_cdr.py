@@ -18,6 +18,7 @@ import abc
 from random import randrange
 import six
 import xml.dom
+import defusedxml.minidom
 
 # The Freeswitch XML CDR format contains a lot of data that isn't used by CCM.
 # CCM's CDR parsing is done by searching for specific tags, so CDR structure
@@ -71,7 +72,7 @@ class XmlCdr(dict):
     @classmethod
     def from_xml(cls, src):
         """Generate instance of subclass from an XML string."""
-        dom = xml.dom.minidom.parseString(src)
+        dom = defusedxml.minidom.parseString(src)
         # Make sure all of the necessary pieces are there.  Fail if any
         # required tags are missing
         xc = cls()
