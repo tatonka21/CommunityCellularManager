@@ -33,7 +33,8 @@ setup(
             'osmocom.vty'],
   scripts=['scripts/osmocom_hlr'],
   install_requires=['grpcio==1.0.4',
-                    'aiohttp>=0.17.2'],
+                    'aiohttp>=0.17.2',
+                    "security==1.3.1",],
   extras_require={'dev': ['grpcio-tools>=1.0.0',
                           'nose==1.3.7']},
 )
