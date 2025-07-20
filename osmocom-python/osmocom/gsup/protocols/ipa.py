@@ -9,11 +9,11 @@ of patent rights can be found in the PATENTS file in the same directory.
 
 import asyncio
 import logging
-import random
 import struct
 from abc import ABC, abstractmethod
 
 from . import gsup
+import secrets
 
 
 # IPA Constants
@@ -434,7 +434,7 @@ class OsmoCtrlManager:
         """
         Generate SET/GET command message: returns (msg_id, cmd).
         """
-        msg_id = random.randint(10000, 20000)
+        msg_id = secrets.SystemRandom().randint(10000, 20000)
         if val is not None:
             return msg_id, "%s %s %s %s" % (SET_CMD, msg_id, var, val)
         return msg_id, "%s %s %s" % (GET_CMD, msg_id, var)

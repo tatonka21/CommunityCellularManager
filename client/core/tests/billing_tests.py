@@ -17,7 +17,6 @@ of patent rights can be found in the PATENTS file in the same directory.
 
 
 import unittest
-import random
 import math
 
 from core.billing import get_call_cost
@@ -27,6 +26,7 @@ from core.billing import process_prices
 from core.billing import round_to_billable_unit
 from core.billing import round_up_to_nearest_100
 from core import config_database
+import secrets
 
 TARIFF = 100
 
@@ -235,7 +235,7 @@ class RoundCostToBillableUnit(unittest.TestCase):
 
     def test_billable_unit_rounding_sans_free_seconds(self):
         for i in range(100):
-            billsec = random.randint(1, 5000)
+            billsec = secrets.SystemRandom().randint(1, 5000)
             expected_cost = int(billsec * (TARIFF / 60.0))
             print('%s seconds should cost %s' % (billsec, expected_cost))
             self.assertEqual(expected_cost,
@@ -243,8 +243,8 @@ class RoundCostToBillableUnit(unittest.TestCase):
 
     def test_billable_unit_rounding_with_free_seconds(self):
         for i in range(100):
-            billsec = random.randint(100, 5000)
-            free = random.randint(1, 100)
+            billsec = secrets.SystemRandom().randint(100, 5000)
+            free = secrets.SystemRandom().randint(1, 100)
             expected_cost = int((billsec - free) * (TARIFF / 60.0))
             print('%s seconds with %s free should cost %s' %
                   (billsec, free, expected_cost))

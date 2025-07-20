@@ -12,11 +12,11 @@ Run this test from the project root:
 """
 
 import mock
-from random import randrange
 import unittest
 
 from core.subscriber import _osmocom
 from core.subscriber.base import SubscriberNotFound
+import secrets
 
 
 class SubscriberTest(unittest.TestCase):
@@ -46,8 +46,8 @@ class SubscriberTest(unittest.TestCase):
 
     def test_add_delete_subscriber(self):
         """ Add and delete a known IMSI. """
-        imsi = 'IMSI%015d' % (randrange(1e14, 9e14), )
-        msisdn = str(randrange(1.1e9, 1.99e9))
+        imsi = 'IMSI%015d' % (secrets.SystemRandom().randrange(1e14, 9e14), )
+        msisdn = str(secrets.SystemRandom().randrange(1.1e9, 1.99e9))
 
         # First call to show should raise exception since IMSI not present,
         # but second should return a dict corresponding to the subscriber.
